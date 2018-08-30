@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+        <head>
+            
+            <title>测试JS与Native交互接口</title>
+            <script type="text/javascript">
+           
+            
+            function setToken() {
+                if (/(WKWebView)/i.test(navigator.userAgent)){
+                    var dic = {'handlerInterface':"mf", 'function':"setToken"};
+                    window.webkit.messageHandlers.mf.postMessage(dic);
+                }
+            }
+            
+            function showToken(token) {
+                alert("token = " + localStorage.getItem("accessToken"));
+            }
+
+            function goToProductDetail(parameters) {
+                alert(navigator.userAgent);
+                alert("sku = " + parameters["sku"] + ", sellout = " + parameters["sellOut"]);
+                if (/(WKWebView)/i.test(navigator.userAgent)){
+                    var dic = {'handlerInterface':"mf", 'function':"goToProductDetail:",'parameters': parameters};
+                    window.webkit.messageHandlers.mf.postMessage(dic);
+                } else {
+                    window.mf.goToProductDetail(parameters["sku"], parameters["sellOut"]);
+                }
+            }
+
+            </script>
+        </head>
+        <body>
+            <br>
+            <h3>测试JS与Native交互接口</h3>
+            <input type="button" value="设置token" onclick="setToken()" /><br><br>
+            <input type="button" value="展示token" onclick="showToken()" /><br><br>
+
+      
+            <input type="button" value="进入商品详情页" onclick="goToProductDetail({'sku':'p-cxysjywsn-2p','sellOut':0})" /><br><br>
+            
+            <input type="button" value="向购物车添加商品" onclick="addGoodsToShopCart(JSON.stringify({'type':'12','code':'34','sku':'p-cxysjywsn-2p','name':'纯享益生菌酸奶360g*2','subtitle':'简单配料 让喝也能简单点','ordering':0,'price':1960,'vip_price':1960,'vip_product':0,'vip_price_pro':{'price_up':{'show_type':1,'color':16761741,'price':1960,'name':'可用券价'},'price_down':{'show_type':1,'color':16730257,'price':1090,'name':'会员价'}},'sell_out':0,'presentNum':2,'nationwide':0}))" /><br><br>
+
+            <input type="button" value="带回调的登陆" onclick="newAppLogin({'loginSuccessCallback':'loginSuccessCallback', 'loginCancelCallback':'loginCancelCallback'})"/><br><br>
+
+            
+        </body>
+</html>
